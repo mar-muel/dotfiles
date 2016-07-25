@@ -7,6 +7,8 @@
 - link:
     ~/.dotfiles: ''
     ~/.vimrc: vimrc
+    ~/.vim: vim
+    ~/.bashrc: bashrc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
