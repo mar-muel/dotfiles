@@ -41,7 +41,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 "Plugin 'Valloric/YouCompleteMe'  "auto-complete any language
 "Plugin 'davidhalter/jedi-vim'
-Plugin 'ctrlpvim/ctrlp.vim'  "file browsing
+" Plugin 'ctrlpvim/ctrlp.vim'  "file browsing
 Plugin 'jiangmiao/auto-pairs'   "Smart auto pair brackets
 Plugin 'flazz/vim-colorschemes' "Download all colorschemes
 Plugin 'tomtom/tcomment_vim'  "commenting any language
@@ -50,6 +50,8 @@ Plugin 'tpope/vim-repeat'     "make vim-surround repeatable
 Plugin 'ervandew/supertab'  "Making ultisnips compatible with YCM
 Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
+Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
+Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
 
 " Python stuff
 Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
@@ -96,6 +98,23 @@ nmap L Lzz
 nmap H Hzz
 nmap M Mzz
 
+" fzf.vim
+" Make sure that if within git directory, search from within project root,
+" otherwise just call :Files
+nmap <C-P> :ProjectFiles<CR>
+command! ProjectFiles execute 'Files' s:find_git_root()
+function! s:find_git_root()
+  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+" Search in all files
+nmap <C-F> :FLines<CR>
+command! -bang -nargs=* FLines call fzf#vim#grep(g:rg_command. shellescape(<q-args>) . ' ' . s:find_git_root(), 1, <bang>0)
+let g:rg_command = '
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "!{.git,node_modules,vendor}/*" 
+  \ -g "!**/node_modules/*" '
+
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
 
@@ -107,7 +126,7 @@ set splitright
 " let g:AutoPairsFlyMode = 1
 
 " Ctrlp options
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
+" let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 " tcomment options
 nnoremap <leader>ch :TCommentAs html<CR>
@@ -155,7 +174,7 @@ nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
 autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
-autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
+autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
 " autocmd filetype tex nnoremap <leader>m :w <bar>:exec '!echo' shellescape('%:r')<CR>
 " Turn off auto-insert for comments (avoiding auto-comment)
 " augroup auto_comment
@@ -185,3 +204,12 @@ function! WinMove(key)
   endif
 endfunction
 
+" Automatic set paste toggle when CMD+V in insert mode
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
