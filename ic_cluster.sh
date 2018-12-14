@@ -4,8 +4,11 @@
 git config --global user.email "martin.mathias.mueller@gmail.com"
 git config --global user.name "Martin Müller"
 
+# conda config
+conda config --add channels conda-forge 
+
 # install stuff
-conda install rsync tmux -y -c conda-forge 
+conda install rsync tmux ncurses -y
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
