@@ -1,5 +1,6 @@
 " Various configs
 syntax on
+set nofoldenable    " disable folding
 set nocompatible " Dont use vi features
 set number  " Use line numbers
 set history=100  " Use more memory 
@@ -15,7 +16,8 @@ set fillchars+=vert:\  " Get rid of | seperator
 set noeb vb t_vb=
 au GUIEnter * set vb t_vb=
 set scrolloff=5 " make cursor always have n lines above/below
-set autochdir
+" set autochdir
+autocmd BufEnter * silent! lcd %:p:h  " change the window-local directory to be the same as the directory of the current file
 set tags=.git/tags;
 
 " Tabs
@@ -52,6 +54,7 @@ Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
+Plugin 'jpalardy/vim-slime'   " tmux integration for vim 
 
 " Python stuff
 Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
@@ -104,16 +107,16 @@ nmap M Mzz
 nmap <C-P> :ProjectFiles<CR>
 command! ProjectFiles execute 'Files' s:find_git_root()
 function! s:find_git_root()
-  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+    return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
 " Search in all files
 nmap <C-F> :FLines<CR>
 command! -bang -nargs=* FLines call fzf#vim#grep(g:rg_command. shellescape(<q-args>) . ' ' . s:find_git_root(), 1, <bang>0)
 let g:rg_command = '
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-  \ -g "!{.git,node_modules,vendor}/*" 
-  \ -g "!**/node_modules/*" '
+    \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+    \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+    \ -g "!{.git,node_modules,vendor}/*" 
+    \ -g "!**/node_modules/*"'
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
@@ -158,8 +161,8 @@ colorscheme default
 
 " Automatically source .vimrc on save
 augroup reload_vimrc
-  autocmd!
-  autocmd BufWritePost $MYVIMRC source $MYVIMRC
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 
 " Generate PyDocstring (default somehow not working)
@@ -182,6 +185,14 @@ autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' 
 "   au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " augroup END
 
+" slime                                                                                                             
+let g:slime_target = "tmux"                                                                                         
+" let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.1"}                            
+let g:slime_default_config = {"socket_name": 'default', "target_pane": ":.1"}                            
+let g:slime_python_ipython = 1                                                                                      
+nmap <leader>a <Plug>SlimeLineSend
+xmap <leader>a <Plug>SlimeRegionSend
+" Alternativly, use <C-c><C-c> and <C-c>v to open config       
 
 " Window movement shortcuts
 " move to the window in the direction shown, or create a new window
@@ -192,16 +203,16 @@ map <C-k> :call WinMove('k')<cr>
 map <C-l> :call WinMove('l')<cr>
 
 function! WinMove(key)
-  let t:curwin = winnr()
-  exec "wincmd ".a:key
-  if (t:curwin == winnr())
-    if (match(a:key,'[jk]'))
-      wincmd v
-    else
-      wincmd s
-    endif
+    let t:curwin = winnr()
     exec "wincmd ".a:key
-  endif
+    if (t:curwin == winnr())
+        if (match(a:key,'[jk]'))
+            wincmd v
+        else
+            wincmd s
+        endif
+        exec "wincmd ".a:key
+    endif
 endfunction
 
 " Automatic set paste toggle when CMD+V in insert mode
@@ -209,7 +220,10 @@ let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 function! XTermPasteBegin()
-  set pastetoggle=<Esc>[201~
-  set paste
-  return ""
+    set pastetoggle=<Esc>[201~
+    set paste
+    return ""
 endfunction
+
+"  python scripts with wrong indentation:
+" :%s/^\s*/&&/g
