@@ -117,15 +117,18 @@ if ! shopt -oq posix; then
 fi
 
 # my own stuff...
+alias ls='ls -GFh'
+alias ll='ls -la'
 alias ..='cd ..' 
 alias ...='cd ../..' 
 alias ....='cd ../../..' 
 alias .....='cd ../../../..'
 alias 'cd..'='cd ..'
-#alias 'activate'='source ./bin/activate' 
-#alias 'deactivate'='source ./bin/deactivate'
-alias 'gp'='git pull'
-notebook () { jupyter notebook "$@" &}
+alias 'trash'='rmtrash'
+alias ta='tmux attach-session'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session'
+alias jn='jupyter notebook'
 
 # virtualenvwrapper
 export WORKON_HOME=$HOME/envs
@@ -133,3 +136,17 @@ source /usr/local/bin/virtualenvwrapper.sh
 
 setterm -term linux -back black
 
+# fzf shortcuts
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
