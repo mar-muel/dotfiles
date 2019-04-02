@@ -1,8 +1,7 @@
-# make sure conda and vim are installed
+# Before running: make sure conda and vim are installed
 
 # git config
-git config --global user.email "martin.mathias.mueller@gmail.com"
-git config --global user.name "Martin Müller"
+rsync ./gitconfig ~/.gitconfig
 
 # conda config
 conda config --add channels conda-forge 
@@ -23,5 +22,3 @@ source ~/.bash_profile
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 rsync ./vimrc ~/.vimrc
 vim -c 'PluginInstall' -c 'qa!'
-
-
