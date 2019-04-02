@@ -1,0 +1,87 @@
+# init rbenv
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# aliases
+alias ls='ls -GFh'
+alias ll='ls -la'
+alias ..='cd ..' 
+alias ...='cd ../..' 
+alias ....='cd ../../..' 
+alias .....='cd ../../../..'
+alias 'cd..'='cd ..'
+alias 'trash'='rmtrash'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session'
+alias jn='jupyter notebook'
+alias ctags="`brew --prefix`/bin/ctags"
+alias szsh="source ~/.zshrc"
+alias vzsh="vim ~/.zshrc"
+alias vprofile="vim ~/.profile"
+
+
+# bash completion (does not work currently)
+#if [ -f $(brew --prefix)/etc/bash_completion ]; then
+#  . $(brew --prefix)/etc/bash_completion
+#fi
+
+# exports
+export PATH="$HOME/Applications/anaconda3/bin:$PATH"
+export PATH=$PATH:/usr/local/sbin 
+
+# fzf shortcuts
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+
+# tmux
+ta() {
+  tmux attach-session -t "$1";
+}
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+
+# tmux
+ta() {
+  tmux attach-session -t "$1";
+}
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# notebook output clean script
+alias nbstrip_jq="jq --indent 1 \
+    '(.cells[] | select(has(\"outputs\")) | .outputs) = []  \
+    | (.cells[] | select(has(\"execution_count\")) | .execution_count) = null  \
+    | .metadata = {\"language_info\": {\"name\": \"python\", \"pygments_lexer\": \"ipython3\"}} \
+    | .cells[].metadata = {} \
+    '"
+
+# Kill process search
+kp() {
+  local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}

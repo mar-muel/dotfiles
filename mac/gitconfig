@@ -1,0 +1,7 @@
+[color]
+	ui = true
+[user]
+	name = Martin Müller
+	email = martin.mathias.mueller@gmail.com
+[merge]
+	tool = vimdiff
