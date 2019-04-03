@@ -108,7 +108,8 @@ command! ProjectFiles execute 'Files' s:find_git_root()
 function! s:find_git_root()
     return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
-" Search in all files
+
+" Search in all files using ripgrep
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
       \   'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
@@ -116,13 +117,6 @@ command! -bang -nargs=* Rg
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
 nnoremap <C-F> :Rg 
-
-command! -bang -nargs=* FLines call fzf#vim#grep(g:rg_command. shellescape(<q-args>) . ' ' . s:find_git_root(), 1, <bang>0)
-let g:rg_command = '
-    \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-    \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-    \ -g "!{.git,node_modules,vendor}/*" 
-    \ -g "!**/node_modules/*"'
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
@@ -233,8 +227,6 @@ function! XTermPasteBegin()
     set paste
     return ""
 endfunction
-
-" faster grepping with rg
 
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g

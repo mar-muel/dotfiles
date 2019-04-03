@@ -43,7 +43,6 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 "Plugin 'Valloric/YouCompleteMe'  "auto-complete any language
 "Plugin 'davidhalter/jedi-vim'
-" Plugin 'ctrlpvim/ctrlp.vim'  "file browsing
 Plugin 'jiangmiao/auto-pairs'   "Smart auto pair brackets
 Plugin 'flazz/vim-colorschemes' "Download all colorschemes
 Plugin 'tomtom/tcomment_vim'  "commenting any language
@@ -109,14 +108,15 @@ command! ProjectFiles execute 'Files' s:find_git_root()
 function! s:find_git_root()
     return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
-" Search in all files
-nmap <C-F> :FLines<CR>
-command! -bang -nargs=* FLines call fzf#vim#grep(g:rg_command. shellescape(<q-args>) . ' ' . s:find_git_root(), 1, <bang>0)
-let g:rg_command = '
-    \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-    \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-    \ -g "!{.git,node_modules,vendor}/*" 
-    \ -g "!**/node_modules/*"'
+
+" Search in all files using ripgrep
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+nnoremap <C-F> :Rg 
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
@@ -140,15 +140,15 @@ let g:ycm_autoclose_preview_window_after_completion=1
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " supertab options
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-let g:SuperTabCrMapping                = 0
+let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:SuperTabCrMapping = 0
 
 " ultisnips options Trigger configuration 
-let g:UltiSnipsSnippetsDir='~/.vim/snippets'
-let g:UltiSnipsEditSplit='vertical'
-let g:UltiSnipsExpandTrigger           = '<tab>'
-let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+let g:UltiSnipsSnippetsDir = '~/.vim/snippets'
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " ultisnips allow html in js files
 autocmd filetype javascript UltiSnipsAddFiletypes html
@@ -184,6 +184,9 @@ autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' 
 "   au!
 "   au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " augroup END
+
+" Ptyhon debug mode
+inoremap _pdb<tab> import pdb; pdb.set_trace();
 
 " slime                                                                                                             
 let g:slime_target = "tmux"                                                                                         
