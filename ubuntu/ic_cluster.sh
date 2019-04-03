@@ -7,7 +7,7 @@ rsync ./gitconfig ~/.gitconfig
 conda config --add channels conda-forge 
 
 # install stuff
-conda install rsync tmux ncurses -y
+conda install rsync tmux ncurses ripgrep -y
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
