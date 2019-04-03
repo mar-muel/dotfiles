@@ -29,6 +29,7 @@ alias vprofile="vim ~/.profile"
 # exports
 export PATH="$HOME/Applications/anaconda3/bin:$PATH"
 export PATH=$PATH:/usr/local/sbin 
+export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 # fzf shortcuts
 fd() {
