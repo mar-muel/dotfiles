@@ -1,0 +1,17 @@
+# aliases
+alias l='ls -CF'
+alias ls='ls -GFh'
+alias ll='ls -la'
+alias ..='cd ..' 
+alias ...='cd ../..' 
+alias ....='cd ../../..' 
+alias .....='cd ../../../..'
+alias 'cd..'='cd ..'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session'
+alias jn='jupyter notebook'
+# mac zsh shortcuts
+alias gd='git diff'
+alias gst='git status'
+alias gcam='git commit -am'
+alias gp='git push origin master'
