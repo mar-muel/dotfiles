@@ -13,7 +13,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 
 # sync profiles
 rsync ./bash_profile ~/.bash_profile
-rsync ./aliases ~/.aliases
+rsync ./bash_aliases ~/.bash_aliases
 rsync ./functions ~/.functions
 rsync ./tmux.conf ~/.tmux.conf
 source ~/.bash_profile
