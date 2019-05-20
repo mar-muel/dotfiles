@@ -1,0 +1,2 @@
+# Put stuff in .profile instead (compatible with zsh)
+source ~/.profile
