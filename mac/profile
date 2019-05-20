@@ -1,6 +1,3 @@
-# init rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # aliases
@@ -29,6 +26,7 @@ alias vprofile="vim ~/.profile"
 # exports
 export PATH="$HOME/Applications/anaconda3/bin:$PATH"
 export PATH=$PATH:/usr/local/sbin 
+# export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!*.{cache,DS_Store}" -g "!{.git,node_modules,vendor}/*"'
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 # fzf shortcuts
@@ -77,6 +75,7 @@ alias nbstrip_jq="jq --indent 1 \
     | .metadata = {\"language_info\": {\"name\": \"python\", \"pygments_lexer\": \"ipython3\"}} \
     | .cells[].metadata = {} \
     '"
+
 
 # Kill process search
 kp() {

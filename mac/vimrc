@@ -1,9 +1,25 @@
 " Various configs
 syntax on
-set nofoldenable    " disable folding
-set nocompatible " Dont use vi features
-set number  " Use line numbers
-set history=100  " Use more memory 
+set ttyfast "more characters will be sent to the screen for redrawing
+
+"time waited for key press(es) to complete. It makes for a faster key response
+set ttimeout
+set ttimeoutlen=50
+
+" incremental search
+" set incsearch
+"searches are case insensitive unless they contain at least one capital letter
+set ignorecase
+set smartcase
+
+" Minimal status line (filepath, modified flag)
+set statusline=%F\ %m
+
+set backspace=indent,eol,start "make backspace behave properly in insert mode
+set nofoldenable  "disable folding
+set nocompatible "Dont use vi features
+set number  "Use line numbers
+set history=100  "Use more memory 
 "set hlsearch   "highlight when search
 set showmatch  "highlight matching parenthesis
 let mapleader = ","
@@ -116,7 +132,11 @@ command! -bang -nargs=* Rg
       \   <bang>0 ? fzf#vim#with_preview('up:60%')
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
-nnoremap <C-F> :Rg 
+
+nnoremap <C-F> :ProjectRg<space>
+command! -bang -nargs=1 ProjectRg
+  \ call fzf#vim#grep('rg --line-number --trim  --color=always --smart-case '
+  \ .<q-args>.' '.s:find_git_root(), 0)
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
@@ -132,8 +152,8 @@ set splitright
 " let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 " tcomment options
-nnoremap <leader>ch :TCommentAs html<CR>
-vnoremap <leader>ch :TCommentAs html<CR>
+nnoremap <leader>h :TCommentAs html<CR>
+vnoremap <leader>h :TCommentAs html<CR>
 
 " YouCompleteMe options
 let g:ycm_autoclose_preview_window_after_completion=1
@@ -149,6 +169,12 @@ let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+" netrw settings
+let g:netrw_banner=0
+let g:netrw_winsize=20
+let g:netrw_liststyle=3
+let g:netrw_localrmdir='rm -r'
 
 " ultisnips allow html in js files
 autocmd filetype javascript UltiSnipsAddFiletypes html
@@ -172,6 +198,7 @@ nmap <silent> <C-I> <Plug>(pydocstring)
 nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>  " Shortcut to edit vimrc file
 nmap <leader>s :w<CR>
 nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
+nnoremap <leader>n :Lexplore<CR>
 
 " Run current python file with <leader>m
 autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
@@ -218,6 +245,7 @@ function! WinMove(key)
     endif
 endfunction
 
+"Copy/pasting on Mac with Terminal.app
 " Automatic set paste toggle when CMD+V in insert mode
 let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
@@ -227,6 +255,10 @@ function! XTermPasteBegin()
     set paste
     return ""
 endfunction
+" Copy to system clipboard (for visual selection mapping a somewhat crazy hack
+" is used to copy the content without copying the full line)
+nmap <leader>c :.w !pbcopy<CR><CR>
+vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g
