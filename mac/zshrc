@@ -54,6 +54,7 @@ ZSH_THEME="minimal"
 plugins=(
   git
   osx
+  vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh

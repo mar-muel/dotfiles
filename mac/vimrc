@@ -19,15 +19,15 @@ set backspace=indent,eol,start "make backspace behave properly in insert mode
 set nofoldenable  "disable folding
 set nocompatible "Dont use vi features
 set number  "Use line numbers
-set history=100  "Use more memory 
+set history=100  "Use more memory
 "set hlsearch   "highlight when search
 set showmatch  "highlight matching parenthesis
 let mapleader = ","
 set term=screen-256color
 " set bg=dark
 "set relativenumber
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     
-set fillchars+=vert:\  " Get rid of | seperator 
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set fillchars+=vert:\  " Get rid of | seperator
 " no sounds
 set noeb vb t_vb=
 au GUIEnter * set vb t_vb=
@@ -45,10 +45,12 @@ set autoindent  "Applies current indentation to next line when hitting o or O
 set smartindent "Syntax dependent indentation
 set softtabstop=2 "How many columns to add when using TAB in insert mode
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
+autocmd FileType yaml,yml setlocal ts=2 sts=2 sw=2 expandtab
+
 " Use :retab to apply those settings to new file!
 
 " reload files changed outside vim
-set autoread 
+set autoread
 
 " Vundle
 filetype off " Needed for vundle to work
@@ -69,26 +71,30 @@ Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
-Plugin 'jpalardy/vim-slime'   " tmux integration for vim 
+Plugin 'jpalardy/vim-slime'   " tmux integration for vim
+
+" Markdown syntax highlighting
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 
 " Python stuff
 Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
 Plugin 'tmhedberg/SimpylFold'  "Allows better folding in python
 
 " JS stuff
-Plugin 'pangloss/vim-javascript' " some js syntax highlighting 
+Plugin 'pangloss/vim-javascript' " some js syntax highlighting
 Plugin 'mxw/vim-jsx' " jsx support
 let g:jsx_ext_required = 0 " do allow js files to contain jsx jsx-code
 
 call vundle#end() "required
-filetype plugin indent on "required  
+filetype plugin indent on "required
 
 " key remappings
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-inoremap jj <ESC> 
+inoremap jj <ESC>
 "nnoremap <leader>m :!%:p<Enter>   "execute current file
 "imap </ <C-X><C-O><C-X>  "doesn't work for some reason
 "this makes python comments indent
@@ -141,15 +147,23 @@ command! -bang -nargs=1 ProjectRg
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
 
+" Pretty format JSON
+com! FormatJSON %!python -m json.tool
+
+
 " open split panes to right and bottom
 set splitbelow
 set splitright
 
+" Remove trailing white spaces after save
+autocmd BufWritePre * %s/\s\+$//e
+
+" Make sure Markdown syntax highlighting works not only for .markdown but also
+" for .md
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+
 " Autopair options
 " let g:AutoPairsFlyMode = 1
-
-" Ctrlp options
-" let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
@@ -163,7 +177,7 @@ nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabCrMapping = 0
 
-" ultisnips options Trigger configuration 
+" ultisnips options Trigger configuration
 let g:UltiSnipsSnippetsDir = '~/.vim/snippets'
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -177,7 +191,7 @@ let g:netrw_liststyle=3
 let g:netrw_localrmdir='rm -r'
 
 " ultisnips allow html in js files
-autocmd filetype javascript UltiSnipsAddFiletypes html
+" autocmd filetype javascript UltiSnipsAddFiletypes html
 
 " SimpylFold options
 set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
@@ -198,31 +212,25 @@ nmap <silent> <C-I> <Plug>(pydocstring)
 nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>  " Shortcut to edit vimrc file
 nmap <leader>s :w<CR>
 nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
-nnoremap <leader>n :Lexplore<CR>
+nnoremap <leader>n :Lexplore<CR>  " Open file tree
+vnoremap <C-P> "0p " Use previously yanked to paste multiple times
 
 " Run current python file with <leader>m
 autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
-" autocmd filetype tex nnoremap <leader>m :w <bar>:exec '!echo' shellescape('%:r')<CR>
-" Turn off auto-insert for comments (avoiding auto-comment)
-" augroup auto_comment
-"   au!
-"   au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-" augroup END
 
 " Ptyhon debug mode
 inoremap _pdb<tab> import pdb; pdb.set_trace();
 
-" slime                                                                                                             
-let g:slime_target = "tmux"                                                                                         
-" let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.1"}                            
-let g:slime_default_config = {"socket_name": 'default', "target_pane": ":.1"}                            
-let g:slime_python_ipython = 1                                                                                      
+" slime
+let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": 'default', "target_pane": ":.1"}
+let g:slime_python_ipython = 1
 nmap <leader>a <Plug>SlimeLineSend
 xmap <leader>a <Plug>SlimeRegionSend
-" Alternativly, use <C-c><C-c> and <C-c>v to open config       
+" Alternativly, use <C-c><C-c> and <C-c>v to open config
 
 " Window movement shortcuts
 " move to the window in the direction shown, or create a new window
@@ -260,5 +268,20 @@ endfunction
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
+
+" -- git command on current file
+fun! GitCommand(command)
+  silent! !clear
+  exec "!git " . a:command . " %"
+endfun
+" -- git diff for current file
+map <leader>gd :call GitCommand("diff") <CR>
+" -- git log for current file
+map <leader>gl :call GitCommand("log -p") <CR>
+" -- git blame for current file
+map <leader>gb :call GitCommand("blame") <CR>
+
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g
+" Remove all control characters in documents:
+" :%s/[[:cntrl:]]//g
