@@ -1,6 +1,7 @@
 " Various configs
 syntax on
 set ttyfast "more characters will be sent to the screen for redrawing
+set encoding=utf-8
 
 "time waited for key press(es) to complete. It makes for a faster key response
 set ttimeout
@@ -23,8 +24,6 @@ set history=100  "Use more memory
 "set hlsearch   "highlight when search
 set showmatch  "highlight matching parenthesis
 let mapleader = ","
-set term=screen-256color
-" set bg=dark
 "set relativenumber
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 set fillchars+=vert:\  " Get rid of | seperator
@@ -214,6 +213,13 @@ nmap <leader>s :w<CR>
 nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
 nnoremap <leader>n :Lexplore<CR>  " Open file tree
 vnoremap <C-P> "0p " Use previously yanked to paste multiple times
+
+" Cite function in latex
+autocmd FileType tex nnoremap <leader>q :Cite<CR>
+command! -bang Cite call fzf#run({'source': 'cat *.bib | sed -e "s/^@.*{\(.*\),/\1/" | grep -v "{\|}"', 'sink*': function('<sid>ag_handler'), 'down': '20%'})
+function! s:ag_handler(lines)
+  call setline('.', getline('.') . '{' . a:lines[0] . '}')
+endfunction
 
 " Run current python file with <leader>m
 autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
