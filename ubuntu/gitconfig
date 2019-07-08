@@ -5,3 +5,5 @@
 	email = martin.mathias.mueller@gmail.com
 [merge]
 	tool = vimdiff
+[push]
+	default = simple

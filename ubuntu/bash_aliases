@@ -1,7 +1,7 @@
 # aliases
 alias l='ls -CF'
 alias ls='ls -GFh'
-alias ll='ls -la'
+alias ll='ls -la --color'
 alias ..='cd ..' 
 alias ...='cd ../..' 
 alias ....='cd ../../..' 

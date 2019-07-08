@@ -62,7 +62,7 @@ Plugin 'tmhedberg/SimpylFold'  "Allows better folding in python
 " JS stuff
 Plugin 'pangloss/vim-javascript' " some js syntax highlighting 
 Plugin 'mxw/vim-jsx' " jsx support
-let g:jsx_ext_required = 0 " do allow js files to contain jsx jsx-code
+let g:jsx_ext_required = 0 " do allow js files to contain jsx-code
 
 call vundle#end() "required
 filetype plugin indent on "required  
@@ -175,6 +175,7 @@ nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
 
 " Run current python file with <leader>m
 autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
+autocmd FileType python nnoremap <buffer> <leader>n :w<CR>:exec '!python -m pdb' shellescape(@%, 1)<cr>
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
