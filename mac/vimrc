@@ -26,7 +26,7 @@ set showmatch  "highlight matching parenthesis
 let mapleader = ","
 "set relativenumber
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-set fillchars+=vert:\  " Get rid of | seperator
+set fillchars+=vert:\  " Get rid of seperator line
 " no sounds
 set noeb vb t_vb=
 au GUIEnter * set vb t_vb=
@@ -197,6 +197,9 @@ set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
 
 " Color scheme
 colorscheme default
+hi StatusLine ctermfg=235
+hi StatusLineNc ctermfg=235
+hi VertSplit ctermfg=235
 
 " Automatically source .vimrc on save
 augroup reload_vimrc
