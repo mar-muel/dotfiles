@@ -83,6 +83,9 @@ Plugin 'tmhedberg/SimpylFold'  "Allows better folding in python
 " JS stuff
 Plugin 'pangloss/vim-javascript' " some js syntax highlighting
 Plugin 'mxw/vim-jsx' " jsx support
+Plugin 'alvan/vim-closetag' " Closes arbitrary jsx tags
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js,*.jsx'
+
 let g:jsx_ext_required = 0 " do allow js files to contain jsx jsx-code
 
 call vundle#end() "required
@@ -176,21 +179,20 @@ nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabCrMapping = 0
 
-" ultisnips options Trigger configuration
-let g:UltiSnipsSnippetsDir = '~/.vim/snippets'
+" ultisnips options
+let g:UltiSnipsSnippetsDir = $HOME.'/dotfiles/snippets'
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
+nnoremap <leader>ue :UltiSnipsEdit<CR>
 
 " netrw settings
 let g:netrw_banner=0
 let g:netrw_winsize=20
 let g:netrw_liststyle=3
 let g:netrw_localrmdir='rm -r'
-
-" ultisnips allow html in js files
-" autocmd filetype javascript UltiSnipsAddFiletypes html
 
 " SimpylFold options
 set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
@@ -210,12 +212,16 @@ augroup END
 " Generate PyDocstring (default somehow not working)
 nmap <silent> <C-I> <Plug>(pydocstring)
 
-" Leader shortcuts
-nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>  " Shortcut to edit vimrc file
+" Open vimrc file
+nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>
+" Save file
 nmap <leader>s :w<CR>
-nmap <leader>t :!ctags -f .git/tags .<CR> " Call ctags manually
-nnoremap <leader>n :Lexplore<CR>  " Open file tree
-vnoremap <C-P> "0p " Use previously yanked to paste multiple times
+" Call ctags
+nmap <leader>t :!ctags -f .git/tags .<CR>
+" Open file tree
+nnoremap <leader>n :Lexplore<CR>
+" Ue previously yanked (e.g. when pasting multiple times)
+vnoremap <C-P> "0p
 
 " Cite function in latex
 autocmd FileType tex nnoremap <leader>q :Cite<CR>
@@ -229,9 +235,6 @@ autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shelle
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
-
-" Ptyhon debug mode
-inoremap _pdb<tab> import pdb; pdb.set_trace();
 
 " slime
 let g:slime_target = "tmux"

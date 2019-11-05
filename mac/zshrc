@@ -118,3 +118,6 @@ if [ -f '/Users/martin/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . 
 
 # rbenv
 eval "$(rbenv init -)"
+
+# remove ability to edit command in vim
+zle -D edit-command-line
