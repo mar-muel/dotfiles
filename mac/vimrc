@@ -202,6 +202,7 @@ colorscheme default
 hi StatusLine ctermfg=235
 hi StatusLineNc ctermfg=235
 hi VertSplit ctermfg=235
+set background=light
 
 " Automatically source .vimrc on save
 augroup reload_vimrc
