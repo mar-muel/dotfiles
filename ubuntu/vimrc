@@ -179,7 +179,7 @@ autocmd FileType python nnoremap <buffer> <leader>n :w<CR>:exec '!python -m pdb'
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
-" autocmd filetype tex nnoremap <leader>m :w <bar>:exec '!echo' shellescape('%:r')<CR>
+autocmd filetype sh nnoremap <leader>m :w <bar> exec '!source '.shellescape('%')<cr>
 " Turn off auto-insert for comments (avoiding auto-comment)
 " augroup auto_comment
 "   au!
