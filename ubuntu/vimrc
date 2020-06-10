@@ -91,6 +91,10 @@ nmap ci, f,cT,
 no <down> ddp
 no <up> ddkP
 
+" Move entire blocks of code in visual mode (stolen from ThePrimeagen)
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
 " Center on } and * and n and L/H/M
 nmap } }zz
 nmap { {zz
