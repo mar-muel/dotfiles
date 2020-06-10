@@ -49,7 +49,7 @@ Plugin 'tomtom/tcomment_vim'  "commenting any language
 Plugin 'tpope/vim-surround'   "for html tags
 Plugin 'tpope/vim-repeat'     "make vim-surround repeatable
 Plugin 'ervandew/supertab'  "Making ultisnips compatible with YCM
-Plugin 'SirVer/ultisnips'   "Engine for snippets
+" Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
@@ -148,14 +148,14 @@ let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabCrMapping = 0
 
 " ultisnips options Trigger configuration 
-let g:UltiSnipsSnippetsDir = '~/.vim/snippets'
-let g:UltiSnipsEditSplit = 'vertical'
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" let g:UltiSnipsSnippetsDir = '~/.vim'
+" let g:UltiSnipsEditSplit = 'vertical'
+" let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " ultisnips allow html in js files
-autocmd filetype javascript UltiSnipsAddFiletypes html
+" autocmd filetype javascript UltiSnipsAddFiletypes html
 
 " SimpylFold options
 set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
