@@ -15,3 +15,5 @@ alias gst='git status'
 alias gcam='git commit -am'
 alias gp='git push origin master'
 alias rsync="rsync -zavh --progress"
+alias coa='conda activate'
+alias cod='conda deactivate'
