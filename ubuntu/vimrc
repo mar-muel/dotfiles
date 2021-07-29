@@ -54,6 +54,7 @@ Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'jpalardy/vim-slime'   " tmux integration for vim 
+Plugin 'nvie/vim-flake8'   " Python linting
 
 " Python stuff
 Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
@@ -104,6 +105,9 @@ nmap L Lzz
 nmap H Hzz
 nmap M Mzz
 
+" Flake8
+autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
+
 " fzf.vim
 " Make sure that if within git directory, search from within project root,
 " otherwise just call :Files
@@ -113,6 +117,16 @@ function! s:find_git_root()
   return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
 
+" " Search in all files using ripgrep
+" command! -bang -nargs=* Rg
+"       \ call fzf#vim#grep(
+"       \   'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
+"       \   <bang>0 ? fzf#vim#with_preview('up:60%')
+"       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+"       \   <bang>0)
+" nnoremap <C-F> :Rg 
+"
+
 " Search in all files using ripgrep
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -120,7 +134,13 @@ command! -bang -nargs=* Rg
       \   <bang>0 ? fzf#vim#with_preview('up:60%')
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
-nnoremap <C-F> :Rg 
+
+nnoremap <C-F> :ProjectRg<space>
+command! -bang -nargs=1 ProjectRg
+  \ call fzf#vim#grep('rg --line-number --trim  --color=always --smart-case '
+  \ .<q-args>.' '.s:find_git_root(), 0)
+
+
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
