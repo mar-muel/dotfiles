@@ -25,7 +25,8 @@ set history=100  "Use more memory
 set showmatch  "highlight matching parenthesis
 let mapleader = ","
 "set relativenumber
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/.git/*,*/.DS_Store,*/.idea
+
 set fillchars+=vert:\  " Get rid of seperator line
 " no sounds
 set noeb vb t_vb=
@@ -64,13 +65,16 @@ Plugin 'jiangmiao/auto-pairs'   "Smart auto pair brackets
 Plugin 'flazz/vim-colorschemes' "Download all colorschemes
 Plugin 'tomtom/tcomment_vim'  "commenting any language
 Plugin 'tpope/vim-surround'   "for html tags
-Plugin 'tpope/vim-repeat'     "make vim-surround repeatable
+Plugin 'tpope/vim-repeat'     " make vim-surround repeatable
+Plugin 'tpope/vim-fugitive'     " git integration
+Plugin 'stsewd/fzf-checkout.vim'     " git checkout with fzf
 Plugin 'ervandew/supertab'  "Making ultisnips compatible with YCM
 Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'jpalardy/vim-slime'   " tmux integration for vim
+Plugin 'nvie/vim-flake8'   " Python linting
 
 " Markdown syntax highlighting
 Plugin 'godlygeek/tabular'
@@ -115,14 +119,31 @@ nmap ci, f,cT,
 no <down> ddp
 no <up> ddkP
 
+" Make Y behave like C, D, etc.
+nnoremap Y y$
+
 " Center on } and * and n and L/H/M
-nmap } }zz
-nmap { {zz
-nmap * *zz
-nmap n nzz
-nmap L Lzz
-nmap H Hzz
-nmap M Mzz
+nnoremap } }zz
+nnoremap { {zz
+nnoremap * *zz
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap L Lzz
+nnoremap H Hzz
+nnoremap M Mzz
+nnoremap M Mzz
+
+" Keeps your cursor at the same position when doing J
+nnoremap J mzJ`z
+
+" Undo break points: when hitting u, only goes back to the last , or .
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
+
+" Flake8
+autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
 
 " fzf.vim
 " Make sure that if within git directory, search from within project root,
@@ -132,6 +153,11 @@ command! ProjectFiles execute 'Files' s:find_git_root()
 function! s:find_git_root()
     return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+
+" fzf-checkout
+nmap <leader>gc :GCheckout<CR>
+
 
 " Search in all files using ripgrep
 command! -bang -nargs=* Rg
@@ -152,7 +178,6 @@ cmap w!! w !sudo tee > /dev/null %
 " Pretty format JSON
 com! FormatJSON %!python -m json.tool
 
-
 " open split panes to right and bottom
 set splitbelow
 set splitright
@@ -163,9 +188,6 @@ autocmd BufWritePre * %s/\s\+$//e
 " Make sure Markdown syntax highlighting works not only for .markdown but also
 " for .md
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-
-" Autopair options
-" let g:AutoPairsFlyMode = 1
 
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
@@ -197,12 +219,17 @@ let g:netrw_localrmdir='rm -r'
 " SimpylFold options
 set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
 
+" fugitive remaps
+nmap <leader>gf :diffget //2<CR> " merge from left
+nmap <leader>gj :diffget //3<CR> " merge from right
+nmap <leader>gs :G<CR>
+
 " Color scheme
 colorscheme default
 hi StatusLine ctermfg=235
 hi StatusLineNc ctermfg=235
 hi VertSplit ctermfg=235
-set background=light
+" set background=light
 
 " Automatically source .vimrc on save
 augroup reload_vimrc
