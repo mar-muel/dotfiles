@@ -3,15 +3,15 @@ syntax on
 set nofoldenable    " disable folding
 set nocompatible " Dont use vi features
 set number  " Use line numbers
-set history=100  " Use more memory 
+set history=100  " Use more memory
 "set hlsearch   "highlight when search
 set showmatch  "highlight matching parenthesis
 let mapleader = ","
 set term=screen-256color
 " set bg=dark
 "set relativenumber
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     
-set fillchars+=vert:\  " Get rid of | seperator 
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set fillchars+=vert:\  " Get rid of | seperator
 " no sounds
 set noeb vb t_vb=
 au GUIEnter * set vb t_vb=
@@ -32,7 +32,7 @@ autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 " Use :retab to apply those settings to new file!
 
 " reload files changed outside vim
-set autoread 
+set autoread
 
 " Vundle
 filetype off " Needed for vundle to work
@@ -53,7 +53,7 @@ Plugin 'SirVer/ultisnips'   "Engine for snippets
 Plugin 'honza/vim-snippets' " Snippets are separated from the engine
 Plugin 'junegunn/fzf' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
-Plugin 'jpalardy/vim-slime'   " tmux integration for vim 
+Plugin 'jpalardy/vim-slime'   " tmux integration for vim
 Plugin 'nvie/vim-flake8'   " Python linting
 
 " Python stuff
@@ -61,19 +61,19 @@ Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
 Plugin 'tmhedberg/SimpylFold'  "Allows better folding in python
 
 " JS stuff
-Plugin 'pangloss/vim-javascript' " some js syntax highlighting 
+Plugin 'pangloss/vim-javascript' " some js syntax highlighting
 Plugin 'mxw/vim-jsx' " jsx support
 let g:jsx_ext_required = 0 " do allow js files to contain jsx-code
 
 call vundle#end() "required
-filetype plugin indent on "required  
+filetype plugin indent on "required
 
 " key remappings
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-inoremap jj <ESC> 
+inoremap jj <ESC>
 "nnoremap <leader>m :!%:p<Enter>   "execute current file
 "imap </ <C-X><C-O><C-X>  "doesn't work for some reason
 "this makes python comments indent
@@ -96,14 +96,28 @@ no <up> ddkP
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
+" Make Y behave like C, D, etc.
+nnoremap Y y$
+
 " Center on } and * and n and L/H/M
-nmap } }zz
-nmap { {zz
-nmap * *zz
-nmap n nzz
-nmap L Lzz
-nmap H Hzz
-nmap M Mzz
+nnoremap } }zz
+nnoremap { {zz
+nnoremap * *zz
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap L Lzz
+nnoremap H Hzz
+nnoremap M Mzz
+nnoremap M Mzz
+
+" Keeps your cursor at the same position when doing J
+nnoremap J mzJ`z
+
+" Undo break points: when hitting u, only goes back to the last , or .
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
 
 " Flake8
 autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
@@ -124,7 +138,7 @@ endfunction
 "       \   <bang>0 ? fzf#vim#with_preview('up:60%')
 "       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
 "       \   <bang>0)
-" nnoremap <C-F> :Rg 
+" nnoremap <C-F> :Rg
 "
 
 " Search in all files using ripgrep
@@ -167,7 +181,7 @@ nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabCrMapping = 0
 
-" ultisnips options Trigger configuration 
+" ultisnips options Trigger configuration
 let g:UltiSnipsSnippetsDir = '~/.vim/snippets'
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -213,14 +227,14 @@ autocmd filetype sh nnoremap <leader>m :w <bar> exec '!source '.shellescape('%')
 " Ptyhon debug mode
 inoremap _pdb<tab> import pdb; pdb.set_trace();
 
-" slime                                                                                                             
-let g:slime_target = "tmux"                                                                                         
-" let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.1"}                            
-let g:slime_default_config = {"socket_name": 'default', "target_pane": ":.1"}                            
-let g:slime_python_ipython = 1                                                                                      
+" slime
+let g:slime_target = "tmux"
+" let g:slime_default_config = {"socket_name": split($TMUX, ",")[0], "target_pane": ":.1"}
+let g:slime_default_config = {"socket_name": 'default', "target_pane": ":.1"}
+let g:slime_python_ipython = 1
 nmap <leader>a <Plug>SlimeLineSend
 xmap <leader>a <Plug>SlimeRegionSend
-" Alternativly, use <C-c><C-c> and <C-c>v to open config       
+" Alternativly, use <C-c><C-c> and <C-c>v to open config
 
 " Window movement shortcuts
 " move to the window in the direction shown, or create a new window
