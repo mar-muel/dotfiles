@@ -2,9 +2,9 @@
 alias l='ls -CF'
 alias ls='ls -GFh'
 alias ll='ls -la --color'
-alias ..='cd ..' 
-alias ...='cd ../..' 
-alias ....='cd ../../..' 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias 'cd..'='cd ..'
 alias tl='tmux list-sessions'
@@ -17,3 +17,5 @@ alias gp='git push origin master'
 alias rsync="rsync -zavh --progress"
 alias coa='conda activate'
 alias cod='conda deactivate'
+alias glog='git log --graph --pretty=oneline --abbrev-commit'
+
