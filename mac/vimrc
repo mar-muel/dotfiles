@@ -76,9 +76,10 @@ Plugin 'junegunn/fzf.vim' "Fuzzy file finder, requires brew install fzf (on Mac)
 Plugin 'jpalardy/vim-slime'   " tmux integration for vim
 Plugin 'nvie/vim-flake8'   " Python linting
 
-" Markdown syntax highlighting
+" Markdown/jinja syntax highlighting
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'lepture/vim-jinja'
 
 " Python stuff
 Plugin 'heavenshell/vim-pydocstring' "Generate Python docstrings
@@ -189,6 +190,9 @@ autocmd BufWritePre * %s/\s\+$//e
 " for .md
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 
+" Other syntax highlighting fixes
+au BufNewFile,BufFilePre,BufRead *.njk set syntax=html
+
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
 vnoremap <leader>h :TCommentAs html<CR>
@@ -208,6 +212,8 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
+autocmd FileType njk UltiSnipsAddFiletypes html  " ultisnips allow html in js files
+
 nnoremap <leader>ue :UltiSnipsEdit<CR>
 
 " netrw settings
