@@ -4,7 +4,7 @@
 sudo apt update && sudo apt upgrade -y
 
 # Install some general tools
-sudo apt-get install -y tmux vim-gtk htop git rsync ripgrep flake8 jq nmon git-lfs
+sudo apt-get install -y tmux vim-gtk htop git rsync flake8 jq nmon git-lfs
 
 # Install mar-muel specific dotfiles
 git clone https://github.com/mar-muel/dotfiles.git ~/dotfiles
