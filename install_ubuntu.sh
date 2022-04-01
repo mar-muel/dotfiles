@@ -6,6 +6,11 @@ sudo apt update && sudo apt upgrade -y
 # Install some general tools
 sudo apt-get install -y tmux vim-gtk htop git rsync flake8 jq nmon git-lfs
 
+# Install ripgrep
+wget https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
+sudo dpkg -i ripgrep_13.0.0_amd64.deb
+rm ripgrep_13.0.0_amd64.deb
+
 # Install mar-muel specific dotfiles
 git clone https://github.com/mar-muel/dotfiles.git ~/dotfiles
 cd ~/dotfiles && chmod +x set_ubuntu.sh && bash set_ubuntu.sh
