@@ -1,10 +1,11 @@
-# This is Git's per-user configuration file.
+[color]
+	ui = true
 [user]
-# Please adapt and uncomment the following lines:
-name = Martin Müller
-email = martin.mathias.mueller@gmail.com
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+	name = Martin Müller
+	email = martin.muller.me@gmail.com
+[merge]
+	tool = vimdiff
+[push]
+	default = simple
+[init]
+	defaultBranch = main

@@ -2,8 +2,10 @@
 	ui = true
 [user]
 	name = Martin Müller
-	email = martin.mathias.mueller@gmail.com
+	email = martin.muller.me@gmail.com
 [merge]
 	tool = vimdiff
 [push]
 	default = simple
+[init]
+	defaultBranch = main
