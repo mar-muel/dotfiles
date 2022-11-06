@@ -4,7 +4,7 @@
 sudo apt update && sudo apt upgrade -y
 
 # Install some general tools
-sudo apt-get install -y tmux vim-gtk htop git rsync flake8 jq nmon git-lfs
+sudo apt-get install -y tmux vim-gtk htop git rsync flake8 jq nmon git-lfs mosh
 
 # Install ripgrep
 wget https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
