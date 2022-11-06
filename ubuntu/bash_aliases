@@ -18,4 +18,7 @@ alias rsync="rsync -zavh --progress"
 alias coa='conda activate'
 alias cod='conda deactivate'
 alias glog='git log --graph --pretty=oneline --abbrev-commit'
-
+alias glog='git log --graph --pretty=oneline --abbrev-commit'
+alias vim="nvim"
+alias v="nvim"
+alias vimrc="nvim ~/.config/nvim/init.vim"
