@@ -12,10 +12,18 @@ alias tk='tmux kill-session'
 alias jn='jupyter notebook'
 alias ctags="`brew --prefix`/bin/ctags"
 alias szsh="source ~/.zshrc"
+alias vim="nvim"
+alias v="nvim"
+alias vimrc="nvim ~/.config/nvim/init.vim"
 alias vzsh="vim ~/.zshrc"
 alias vprofile="vim ~/.profile"
 alias rsync="rsync -zavh --progress"
 alias coa="conda activate"
+alias tfv="terraform validate"
+alias tff="terraform fmt"
+alias tfa="terraform apply"
+alias tf="terraform"
+alias tarpigz="tar --use-compress-program=pigz"
 
 # exports
 # export PATH=$PATH:/usr/local/sbin
@@ -66,3 +74,9 @@ kp() {
     echo $pid | xargs kill -${1:-9}
   fi
 }
+
+# env vars
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+eval "$(rbenv init -)"
