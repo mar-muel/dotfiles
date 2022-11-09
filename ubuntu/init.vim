@@ -11,6 +11,7 @@ let mapleader = ","  " set leader key
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/.git/*,*/.DS_Store,*/.idea  " ignore certain files when using autocomplete
 set scrolloff=5 " make cursor always have n lines above/below
 set nowrap
+set splitbelow
 
 " Search config
 set ignorecase  " ignore case when search
@@ -98,6 +99,9 @@ Plug 'nvie/vim-flake8'   " Python linting
 
 " Colorscheme
 Plug 'projekt0n/github-nvim-theme'
+
+" Github Copilot
+Plug 'github/copilot.vim'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -203,12 +207,22 @@ function! CompileLatex()
 endfunction
 
 " Execute current buffer with <leader>m
-autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
+" autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
+augroup neovim_terminal
+    autocmd!
+    " Enter Terminal-mode (insert) automatically
+    autocmd TermOpen * startinsert
+    " Disables number lines on terminal buffers
+    autocmd TermOpen * :set nonumber norelativenumber
+    " allows you to use Ctrl-c on terminal window
+    autocmd TermOpen * nnoremap <buffer> <C-c> i<C-c>
+augroup END
+autocmd FileType python nnoremap <leader>m :w<CR>:term python %<CR>
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
 autocmd filetype tex nnoremap <leader>m :call CompileLatex()<CR>
-autocmd filetype sh nnoremap <leader>m :w <bar> exec '!source '.shellescape('%')<cr>
+autocmd filetype sh nnoremap <leader>m :w<CR>:term source %<CR>
 
 " Remove trailing white spaces after save
 autocmd BufWritePre * %s/\s\+$//e
