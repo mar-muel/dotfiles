@@ -86,6 +86,7 @@ cmap w!! w !sudo tee > /dev/null %
 " Pretty format JSON
 com! FormatJSON %!python -m json.tool
 
+let g:python3_host_prog = '/usr/bin/python3'
 " ----------------------------------
 " PLUGINS
 " ----------------------------------
