@@ -7,9 +7,9 @@ sudo apt update && sudo apt upgrade -y
 sudo apt-get install -y tmux htop git rsync flake8 jq nmon git-lfs mosh
 
 # Install neovim
-sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo add-apt-repository -y ppa:neovim-ppa/unstable
 sudo apt-get update
-sudo apt-get install neovim python3-neovim
+sudo apt-get install -y neovim python3-neovim
 
 # Install ripgrep
 wget https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
