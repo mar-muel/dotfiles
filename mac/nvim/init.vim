@@ -3,7 +3,6 @@ set encoding=utf-8
 filetype plugin indent on  " detects filetypes, plugins, and indent files
 syntax on  " syntax highlighting
 set number  " Use line numbers
-set relativenumber " enable relative line numbers
 set nofoldenable  "disable folding
 set nohlsearch   " do not highlight when search
 set showmatch  " highlight matching parenthesis
@@ -103,12 +102,25 @@ Plug 'projekt0n/github-nvim-theme'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
+" LSP
+Plug 'neovim/nvim-lspconfig'
+
 " Improved Syntax highlighting
 " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" Github Copilot
+Plug 'github/copilot.vim'
 
 " Snippets
 Plug 'SirVer/ultisnips'   " Engine for snippets
 Plug 'honza/vim-snippets' " Snippets are separated from the engine
+
+" Old school plugin to manage multiple things with tab
+Plug 'ervandew/supertab'
+
+" LSP
+Plug 'neovim/nvim-lspconfig' " Configurations for language servers
+
 call plug#end()
 
 " ----------------------------------
@@ -132,12 +144,12 @@ nnoremap <leader>h :TCommentAs html<CR>
 vnoremap <leader>h :TCommentAs html<CR>
 
 " ultisnips options
-let g:UltiSnipsEditSplit = 'vertical'
-let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsEditSplit = 'vertical'
+" let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<c-n>'
-let g:UltiSnipsJumpBackwardTrigger = '<c-b>'
-autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
-autocmd FileType njk UltiSnipsAddFiletypes html  " ultisnips allow html in js files
+let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
+" autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
+" autocmd FileType njk UltiSnipsAddFiletypes html  " ultisnips allow html in js files
 nnoremap <leader>ue :UltiSnipsEdit<CR>
 
 " netrw settings
@@ -182,6 +194,17 @@ endfunction
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
+"LSP
+lua require("usr.lspconfig")
+
+"Supertab
+" make supertab work with omnifunc
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc','&completefunc']
+let g:SuperTabRetainCompletionType=2
+inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
 " ----------------------------------
 " Autocmds
 " ----------------------------------
@@ -203,12 +226,24 @@ function! CompileLatex()
 endfunction
 
 " Execute current buffer with <leader>m
-autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
+" autocmd FileType python nnoremap <buffer> <leader>m :w<CR>:exec '!python' shellescape(@%, 1)<cr>
+augroup neovim_terminal
+    autocmd!
+    " Enter Terminal-mode (insert) automatically
+    autocmd TermOpen * startinsert
+    " Disables number lines on terminal buffers
+    autocmd TermOpen * :set nonumber norelativenumber
+    " allows you to use Ctrl-c on terminal window
+    autocmd TermOpen * nnoremap <buffer> <C-c> i<C-c>
+augroup END
+
+" Execute current buffer with <leader>m
+autocmd FileType python nnoremap <leader>m :w<CR>:term python %<CR>
 autocmd filetype c nnoremap <leader>m :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype cpp nnoremap <leader>m :w <bar> exec '!g++ -Wall -g -std=c++11 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype tex nnoremap <leader>m :w <bar> exec '!latexmk -pdf -xelatex ' shellescape(@%, 1) '&& open '.shellescape('%:r').'.pdf' <CR>
 autocmd filetype tex nnoremap <leader>m :call CompileLatex()<CR>
-autocmd filetype sh nnoremap <leader>m :w <bar> exec '!source '.shellescape('%')<cr>
+autocmd filetype sh nnoremap <leader>m :w<CR>:term source %<cr>
 
 " Remove trailing white spaces after save
 autocmd BufWritePre * %s/\s\+$//e
