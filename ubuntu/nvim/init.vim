@@ -3,7 +3,6 @@ set encoding=utf-8
 filetype plugin indent on  " detects filetypes, plugins, and indent files
 syntax on  " syntax highlighting
 set number  " Use line numbers
-set relativenumber " enable relative line numbers
 set nofoldenable  "disable folding
 set nohlsearch   " do not highlight when search
 set showmatch  " highlight matching parenthesis
@@ -101,9 +100,6 @@ Plug 'nvie/vim-flake8'   " Python linting
 " Colorscheme
 Plug 'projekt0n/github-nvim-theme'
 
-" Github Copilot
-Plug 'github/copilot.vim'
-
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
@@ -111,9 +107,19 @@ Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 " Improved Syntax highlighting
 " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+" Github Copilot
+Plug 'github/copilot.vim'
+
 " Snippets
 Plug 'SirVer/ultisnips'   " Engine for snippets
 Plug 'honza/vim-snippets' " Snippets are separated from the engine
+
+" Old school plugin to manage multiple things with tab
+Plug 'ervandew/supertab'
+
+" LSP
+Plug 'neovim/nvim-lspconfig' " Configurations for language servers
+
 call plug#end()
 
 " ----------------------------------
@@ -187,6 +193,16 @@ endfunction
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
+"LSP
+lua require("usr.lspconfig")
+
+"Supertab
+" make supertab work with omnifunc
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc','&completefunc']
+let g:SuperTabRetainCompletionType=2
+inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " ----------------------------------
 " Autocmds
 " ----------------------------------

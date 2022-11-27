@@ -102,9 +102,6 @@ Plug 'projekt0n/github-nvim-theme'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
-" LSP
-Plug 'neovim/nvim-lspconfig'
-
 " Improved Syntax highlighting
 " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
