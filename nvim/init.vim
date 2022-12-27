@@ -108,15 +108,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Github Copilot
 Plug 'github/copilot.vim'
 
-" Snippets
-" Plug 'SirVer/ultisnips'   " Engine for snippets
-" Plug 'honza/vim-snippets' " Snippets are separated from the engine
-
-" Old school plugin to manage multiple things with tab
-" Plug 'ervandew/supertab'
-
 " lsp-zero config (https://github.com/VonHeikemen/lsp-zero.nvim)
-" LSP Support
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
@@ -133,7 +125,6 @@ Plug 'hrsh7th/cmp-omni'
 "  Snippets
 Plug 'L3MON4D3/LuaSnip'
 Plug 'rafamadriz/friendly-snippets'
-
 Plug 'VonHeikemen/lsp-zero.nvim'
 
 call plug#end()
@@ -157,15 +148,6 @@ nnoremap <C-F> <cmd>Telescope live_grep<cr>
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
 vnoremap <leader>h :TCommentAs html<CR>
-
-" ultisnips options
-" let g:UltiSnipsEditSplit = 'vertical'
-" let g:UltiSnipsExpandTrigger = '<tab>'
-" let g:UltiSnipsJumpForwardTrigger = '<c-n>'
-" let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
-" autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
-" autocmd FileType njk UltiSnipsAddFiletypes html  " ultisnips allow html in js files
-" nnoremap <leader>ue :UltiSnipsEdit<CR>
 
 " netrw settings
 let g:netrw_banner=0
@@ -212,14 +194,6 @@ vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res
 "LSP
 lua require("usr.lspconfig")
 lua require("usr.treesitter")
-
-"Supertab
-" make supertab work with omnifunc
-" let g:SuperTabDefaultCompletionType = 'context'
-" let g:SuperTabContextTextOmniPrecedence = ['&omnifunc','&completefunc']
-" let g:SuperTabRetainCompletionType=2
-" inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " ----------------------------------
 " Autocmds
