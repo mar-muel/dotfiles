@@ -132,6 +132,11 @@ call plug#end()
 " ----------------------------------
 " PLUGIN OPTIONS
 " ----------------------------------
+" Lua config
+lua require("usr.lspconfig")
+lua require("usr.treesitter")
+lua require("usr.ls")
+
 " Color scheme
 colorscheme github_light
 hi StatusLine ctermfg=235
@@ -190,10 +195,6 @@ endfunction
 " is used to copy the content without copying the full line)
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
-
-"LSP
-lua require("usr.lspconfig")
-lua require("usr.treesitter")
 
 " ----------------------------------
 " Autocmds
