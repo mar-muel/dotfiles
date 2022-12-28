@@ -136,6 +136,7 @@ call plug#end()
 lua require("usr.lspconfig")
 lua require("usr.treesitter")
 lua require("usr.ls")
+lua require("usr.telescope")
 
 " Color scheme
 colorscheme github_light
@@ -147,7 +148,7 @@ hi VertSplit ctermfg=235
 autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
 
 " Telescope
-nnoremap <C-P> <cmd>Telescope git_files show_untracked=true<cr>
+nnoremap <C-P> <cmd>lua require('usr.telescope').project_files()<CR>
 nnoremap <C-F> <cmd>Telescope live_grep<cr>
 
 " tcomment options
