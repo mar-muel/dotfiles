@@ -19,6 +19,7 @@ set scrolloff=5 " make cursor always have n lines above/below
 " set autochdir
 autocmd BufEnter * silent! lcd %:p:h  " change the window-local directory to be the same as the directory of the current file
 set tags=.git/tags;
+set bg=light
 
 " Tabs
 set nowrap
@@ -44,7 +45,7 @@ Plugin 'VundleVim/Vundle.vim'
 "Plugin 'Valloric/YouCompleteMe'  "auto-complete any language
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'jiangmiao/auto-pairs'   "Smart auto pair brackets
-Plugin 'flazz/vim-colorschemes' "Download all colorschemes
+" Plugin 'flazz/vim-colorschemes' "Download all colorschemes
 Plugin 'tomtom/tcomment_vim'  "commenting any language
 Plugin 'tpope/vim-surround'   "for html tags
 Plugin 'tpope/vim-repeat'     "make vim-surround repeatable
@@ -195,7 +196,7 @@ autocmd filetype javascript UltiSnipsAddFiletypes html
 set foldlevelstart=20  "Do not fold on start (only when using SimpylFold)
 
 " Color scheme
-colorscheme default
+" colorscheme default
 
 " Automatically source .vimrc on save
 augroup reload_vimrc
