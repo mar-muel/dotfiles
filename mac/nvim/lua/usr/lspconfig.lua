@@ -1,30 +1,62 @@
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  -- vim.keymap.set('n', '<space>wl', function()
-  --   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  -- end, bufopts)
-  -- vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  -- vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  -- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  -- vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-end
+local lsp = require('lsp-zero')
+local cmp = require('cmp')
+local luasnip = require('luasnip')
+local keymap = require('cmp.utils.keymap')
 
 
-require('lspconfig')['pyright'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
+lsp.preset('recommended')
 
+lsp.ensure_installed({
+  'tsserver',
+  'eslint',
+  'pyright'
+})
+
+lsp.setup_nvim_cmp({
+    mapping = {
+        -- from: https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#intellij-like-mapping
+        ["<Tab>"] = cmp.mapping(
+            function(fallback)
+                -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
+                if cmp.visible() then
+                    local entry = cmp.get_selected_entry()
+                    if not entry then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                    else
+                        cmp.confirm()
+                    end
+                elseif luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                else
+                    if vim.fn.pumvisible() == 0 then
+                        vim.api.nvim_feedkeys(keymap.t('<C-z>'), 'in', true)
+                    else
+                        vim.api.nvim_feedkeys(keymap.t('<C-n>'), 'in', true)
+                    end
+                end
+            end, {"i","s","c",}),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                if vim.fn.pumvisible() == 0 then
+                    vim.api.nvim_feedkeys(keymap.t('<C-z><C-p><C-p>'), 'in', true)
+                else
+                    vim.api.nvim_feedkeys(keymap.t('<C-p>'), 'in', true)
+                end
+            end
+        end, {"i", "s"}),
+        ['<CR>'] = cmp.mapping.confirm(),
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+    }
+})
+
+lsp.set_preferences({
+    -- disable sign icons
+    sign_icons = {  }
+})
+
+lsp.setup()

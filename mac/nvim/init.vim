@@ -103,26 +103,38 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
 " Improved Syntax highlighting
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-" Github Copilot
-Plug 'github/copilot.vim'
+" lsp-zero config (https://github.com/VonHeikemen/lsp-zero.nvim)
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 
-" Snippets
-Plug 'SirVer/ultisnips'   " Engine for snippets
-Plug 'honza/vim-snippets' " Snippets are separated from the engine
+" Autocompletion
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'hrsh7th/cmp-omni'
 
-" Old school plugin to manage multiple things with tab
-Plug 'ervandew/supertab'
-
-" LSP
-Plug 'neovim/nvim-lspconfig' " Configurations for language servers
+"  Snippets
+Plug 'L3MON4D3/LuaSnip'
+Plug 'rafamadriz/friendly-snippets'
+Plug 'VonHeikemen/lsp-zero.nvim'
 
 call plug#end()
 
 " ----------------------------------
 " PLUGIN OPTIONS
 " ----------------------------------
+" Lua config
+lua require("usr.lspconfig")
+lua require("usr.treesitter")
+lua require("usr.ls")
+lua require("usr.telescope")
+
 " Color scheme
 colorscheme github_light
 hi StatusLine ctermfg=235
@@ -133,21 +145,16 @@ hi VertSplit ctermfg=235
 autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
 
 " Telescope
-nnoremap <C-P> <cmd>Telescope find_files<cr>
+nnoremap <C-P> <cmd>lua require('usr.telescope').project_files()<CR>
 nnoremap <C-F> <cmd>Telescope live_grep<cr>
+
+" lsp
+nnoremap <leader>g <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
 
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
 vnoremap <leader>h :TCommentAs html<CR>
-
-" ultisnips options
-" let g:UltiSnipsEditSplit = 'vertical'
-" let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<c-n>'
-let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
-" autocmd FileType javascript UltiSnipsAddFiletypes html  " ultisnips allow html in js files
-" autocmd FileType njk UltiSnipsAddFiletypes html  " ultisnips allow html in js files
-nnoremap <leader>ue :UltiSnipsEdit<CR>
 
 " netrw settings
 let g:netrw_banner=0
@@ -190,17 +197,6 @@ endfunction
 " is used to copy the content without copying the full line)
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
-
-"LSP
-lua require("usr.lspconfig")
-
-"Supertab
-" make supertab work with omnifunc
-let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabContextTextOmniPrecedence = ['&omnifunc','&completefunc']
-let g:SuperTabRetainCompletionType=2
-inoremap <expr><Enter>  pumvisible() ? "\<C-Y>" : "\<Enter>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " ----------------------------------
 " Autocmds
@@ -251,6 +247,9 @@ au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 " Other syntax highlighting fixes
 au BufNewFile,BufFilePre,BufRead *.njk set syntax=html
 au BufNewFile,BufFilePre,BufRead Dockerfile.* set syntax=dockerfile
+
+" Use 2 spaces for HTML files
+autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g
