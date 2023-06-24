@@ -134,6 +134,7 @@ lua require("usr.lspconfig")
 lua require("usr.treesitter")
 lua require("usr.ls")
 lua require("usr.telescope")
+" lua require("usr.other")
 
 " Color scheme
 colorscheme github_light
