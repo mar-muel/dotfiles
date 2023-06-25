@@ -152,6 +152,7 @@ nnoremap <C-F> <cmd>Telescope live_grep<cr>
 " lsp
 nnoremap <leader>g <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
+lua vim.diagnostic.config({signs = true, virtual_text = false})  " disable inline diagnostics, only show sign
 
 " tcomment options
 nnoremap <leader>h :TCommentAs html<CR>
