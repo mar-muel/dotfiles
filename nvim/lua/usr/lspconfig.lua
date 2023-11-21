@@ -1,19 +1,36 @@
-local lsp = require('lsp-zero')
-local cmp = require('cmp')
-local luasnip = require('luasnip')
+-- Add additional capabilities supported by nvim-cmp
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local lspconfig = require('lspconfig')
+-- local keymap = require('cmp.utils.keymap')
 
-lsp.preset('recommended')
+local servers = { 'pyright' }
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+    -- on_attach = my_custom_on_attach,
+    capabilities = capabilities,
+  }
+end
 
-lsp.ensure_installed({
-  'tsserver',
-  'eslint',
-  'sumneko_lua',
-  'pyright'
-})
 
-lsp.setup_nvim_cmp({
-    mapping = {
-        -- from: https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#intellij-like-mapping
+-- luasnip setup
+local luasnip = require 'luasnip'
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+cmp.setup {
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
+        ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        },
         ["<Tab>"] = cmp.mapping(
             function(fallback)
                 -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
@@ -27,7 +44,11 @@ lsp.setup_nvim_cmp({
                 elseif luasnip.expand_or_jumpable() then
                     luasnip.expand_or_jump()
                 else
-                    fallback()
+                    if vim.fn.pumvisible() == 0 then
+                        vim.api.nvim_feedkeys(keymap.t('<C-z>'), 'in', true)
+                    else
+                        vim.api.nvim_feedkeys(keymap.t('<C-n>'), 'in', true)
+                    end
                 end
             end, {"i","s","c",}),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
@@ -36,18 +57,18 @@ lsp.setup_nvim_cmp({
             elseif luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
-                fallback()
+                if vim.fn.pumvisible() == 0 then
+                    vim.api.nvim_feedkeys(keymap.t('<C-z><C-p><C-p>'), 'in', true)
+                else
+                    vim.api.nvim_feedkeys(keymap.t('<C-p>'), 'in', true)
+                end
             end
         end, {"i", "s"}),
-        ['<CR>'] = cmp.mapping.confirm(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
         ['<C-p>'] = cmp.mapping.select_prev_item(),
-    }
-})
-
-lsp.set_preferences({
-    -- disable sign icons
-    sign_icons = {  }
-})
-
-lsp.setup()
+    }),
+    sources = {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    },
+}

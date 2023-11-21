@@ -26,15 +26,18 @@ set smartindent " Syntax dependent indentation
 set softtabstop=4 " How many columns to add when using TAB in insert mode
 " Use :retab to apply those settings to new file!
 
+" Use system Python
+let g:python3_host_prog = '/usr/bin/python3'
+
 " General key mappings
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 inoremap jj <ESC>
-"this makes python comments indent
-inoremap # X<BS>#
-nnoremap <space> za
+" "this makes python comments indent
+" inoremap # X<BS>#
+" nnoremap <space> za
 
 " Comma motions
 nmap di, f,dT,
@@ -87,11 +90,17 @@ com! FormatJSON %!python -m json.tool
 " ----------------------------------
 " PLUGINS
 " ----------------------------------
+" Automatically install vim Plug if needed
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 call plug#begin()
 Plug 'jiangmiao/auto-pairs'   "Smart auto pair brackets
-Plug 'tomtom/tcomment_vim'  "commenting any language
-Plug 'tpope/vim-surround'   "for html tags
+Plug 'numToStr/Comment.nvim'  " Comment in any language
+Plug 'tpope/vim-surround'   " enables to edit surrounding brackets, tags, etc.
 Plug 'tpope/vim-repeat'     " make vim-surround repeatable
 Plug 'nvie/vim-flake8'   " Python linting
 
@@ -100,43 +109,46 @@ Plug 'projekt0n/github-nvim-theme'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 
 " Improved Syntax highlighting
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-" Github Copilot
-Plug 'github/copilot.vim'
+" LSP
+Plug 'neovim/nvim-lspconfig'   " manages launching/interactions with lsps
+Plug 'hrsh7th/nvim-cmp'        " autocompletion plugin
+Plug 'hrsh7th/cmp-nvim-lsp'    " LSP source for nvim-cmp
 
-" lsp-zero config (https://github.com/VonHeikemen/lsp-zero.nvim)
-Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
-
-" Autocompletion
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-nvim-lua'
-Plug 'hrsh7th/cmp-omni'
+" Can be added in future maybe
+Plug 'williamboman/mason.nvim', {'do': ':MasonUpdate'} " Optional
+Plug 'williamboman/mason-lspconfig.nvim'               " Optional
 
 "  Snippets
-Plug 'L3MON4D3/LuaSnip'
-Plug 'rafamadriz/friendly-snippets'
-Plug 'VonHeikemen/lsp-zero.nvim'
+Plug 'L3MON4D3/LuaSnip', {'tag': 'v1.2.1', 'do': 'make install_jsregexp'}   " Snippets plugin
+Plug 'saadparwaiz1/cmp_luasnip'                                             " Snippets source for nvim-cmp
+Plug 'rafamadriz/friendly-snippets'                                         " Additional snippets
+
+" Null-ls
+Plug 'jose-elias-alvarez/null-ls.nvim'
 
 call plug#end()
 
 " ----------------------------------
 " PLUGIN OPTIONS
 " ----------------------------------
+" mason
+lua require("mason").setup()
+lua require("mason-lspconfig").setup()
+lua require("mason-lspconfig").setup { ensure_installed = { 'pyright' } }
+
 " Lua config
 lua require("usr.lspconfig")
 lua require("usr.treesitter")
-lua require("usr.ls")
 lua require("usr.telescope")
+lua require("usr.null_ls")
+
+" Load friendly snippets
+lua require("luasnip.loaders.from_vscode").load()
 
 " Color scheme
 colorscheme github_light
@@ -145,15 +157,21 @@ hi StatusLineNc ctermfg=235
 hi VertSplit ctermfg=235
 
 " Flake8
+let g:flake8_cmd='/opt/homebrew/bin/flake8'
 autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
 
 " Telescope
 nnoremap <C-P> <cmd>lua require('usr.telescope').project_files()<CR>
 nnoremap <C-F> <cmd>Telescope live_grep<cr>
 
+" lsp
+nnoremap <leader>g <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
+nnoremap gd <cmd>lua vim.lsp.buf.definition()<CR>
+lua vim.diagnostic.config({signs = true, virtual_text = false})
+
 " tcomment options
-nnoremap <leader>h :TCommentAs html<CR>
-vnoremap <leader>h :TCommentAs html<CR>
+lua require('Comment').setup()
 
 " netrw settings
 let g:netrw_banner=0
