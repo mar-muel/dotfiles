@@ -9,5 +9,5 @@ cd && sudo apt-get update && sudo apt-get install -y curl && curl -sO https://ra
 ```
 Same but using neovim instead of vim
 ```bash
-cd && sudo apt-get update && sudo apt-get install -y curl && curl -sO https://raw.githubusercontent.com/mar-muel/dotfiles/master/install_ubuntu_neovim.sh && source install_ubuntu_neovim.sh
+cd && sudo apt-get update && sudo apt-get install -y curl && curl -sO https://raw.githubusercontent.com/mar-muel/dotfiles/master/install_ubuntu_nvim.sh  && source install_ubuntu_nvim.sh
 ```
