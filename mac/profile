@@ -28,6 +28,7 @@ alias tarpigz="tar --use-compress-program=pigz"
 # exports
 # export PATH=$PATH:/usr/local/sbin
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
+export EDITOR='vim'
 if [[ $TERM == xterm ]]; then TERM=xterm-256color; fi
 
 # fzf shortcuts
