@@ -1,5 +1,4 @@
 rsync ubuntu/vimrc ~/.vimrc
-mkdir -p ~/.config/nvim && rsync -r ubuntu/nvim/ ~/.config/nvim/
 rsync ubuntu/bash_aliases ~/.bash_aliases
 rsync ubuntu/gitconfig ~/.gitconfig
 rsync ubuntu/bashrc ~/.bashrc
