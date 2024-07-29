@@ -70,6 +70,11 @@ inoremap . .<c-g>u
 inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
 
+" allow moving left and right in insert mode
+inoremap <C-l> <Right>
+inoremap <C-h> <Left>
+inoremap <C-o> <Esc>o
+
 " Open vimrc file
 nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>
 " Source vimrc
@@ -98,11 +103,11 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
-Plug 'jiangmiao/auto-pairs'   "Smart auto pair brackets
+Plug 'windwp/nvim-autopairs'  " Smart auto pair brackets
 Plug 'numToStr/Comment.nvim'  " Comment in any language
-Plug 'tpope/vim-surround'   " enables to edit surrounding brackets, tags, etc.
-Plug 'tpope/vim-repeat'     " make vim-surround repeatable
-Plug 'nvie/vim-flake8'   " Python linting
+Plug 'tpope/vim-surround'     " enables to edit surrounding brackets, tags, etc.
+Plug 'tpope/vim-repeat'       " make vim-surround repeatable
+Plug 'nvie/vim-flake8'        " Python linting
 
 " Colorscheme
 Plug 'projekt0n/github-nvim-theme'
@@ -112,21 +117,20 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 
 " Improved Syntax highlighting
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " LSP
 Plug 'neovim/nvim-lspconfig'   " manages launching/interactions with lsps
 Plug 'hrsh7th/nvim-cmp'        " autocompletion plugin
 Plug 'hrsh7th/cmp-nvim-lsp'    " LSP source for nvim-cmp
 
-" Can be added in future maybe
-Plug 'williamboman/mason.nvim', {'do': ':MasonUpdate'} " Optional
-Plug 'williamboman/mason-lspconfig.nvim'               " Optional
-
 "  Snippets
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v1.2.1', 'do': 'make install_jsregexp'}   " Snippets plugin
 Plug 'saadparwaiz1/cmp_luasnip'                                             " Snippets source for nvim-cmp
 Plug 'rafamadriz/friendly-snippets'                                         " Additional snippets
+
+" Mason
+Plug 'williamboman/mason.nvim'
 
 " Null-ls
 Plug 'jose-elias-alvarez/null-ls.nvim'
@@ -136,16 +140,14 @@ call plug#end()
 " ----------------------------------
 " PLUGIN OPTIONS
 " ----------------------------------
-" mason
-lua require("mason").setup()
-lua require("mason-lspconfig").setup()
-lua require("mason-lspconfig").setup { ensure_installed = { 'pyright' } }
-
 " Lua config
 lua require("usr.lspconfig")
 lua require("usr.treesitter")
 lua require("usr.telescope")
 lua require("usr.null_ls")
+
+" Autopairs
+lua require("nvim-autopairs").setup {}
 
 " Load friendly snippets
 lua require("luasnip.loaders.from_vscode").load()
@@ -214,6 +216,9 @@ endfunction
 " is used to copy the content without copying the full line)
 nmap <leader>c :.w !pbcopy<CR><CR>
 vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
+
+" Mason
+lua require("mason").setup()
 
 " ----------------------------------
 " Autocmds
