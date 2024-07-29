@@ -3,6 +3,7 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspconfig = require('lspconfig')
 -- local keymap = require('cmp.utils.keymap')
 
+-- Python
 local servers = { 'pyright' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -11,6 +12,19 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+-- Rust
+lspconfig.rust_analyzer.setup {
+    settings = {
+        ['rust-analyzer'] = {
+            check = {
+                command = "clippy";
+            },
+            diagnostics = {
+                enable = true;
+            }
+        }
+    }
+}
 
 -- luasnip setup
 local luasnip = require 'luasnip'
