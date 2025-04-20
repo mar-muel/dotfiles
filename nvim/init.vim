@@ -22,7 +22,6 @@ set statusline=%F\ %m
 set tabstop=4 " Display text with tabs as n columns
 set expandtab  " Convert tab into spaces when using tab
 set shiftwidth=4  " Indentation when using > and <
-set smartindent " Syntax dependent indentation
 set softtabstop=4 " How many columns to add when using TAB in insert mode
 " Use :retab to apply those settings to new file!
 
