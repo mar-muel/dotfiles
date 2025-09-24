@@ -79,7 +79,7 @@ nmap <leader>v :vsp<CR>:e $MYVIMRC<CR>
 " Source vimrc
 nmap <leader>s :source ~/.config/nvim/init.vim<CR>
 " Call ctags
-nmap <leader>t :!ctags -f .git/tags .<CR>
+" nmap <leader>t :!ctags -f .git/tags .<CR>
 " Open file tree
 nnoremap <leader>n :Lexplore<CR>
 " Use previously yanked (e.g. when pasting multiple times)
@@ -116,7 +116,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 
 " Improved Syntax highlighting
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " LSP
 Plug 'neovim/nvim-lspconfig'   " manages launching/interactions with lsps
@@ -133,6 +133,9 @@ Plug 'williamboman/mason.nvim'
 
 " Null-ls
 Plug 'jose-elias-alvarez/null-ls.nvim'
+
+" Git worktrees
+Plug 'ThePrimeagen/git-worktree.nvim'
 
 call plug#end()
 
@@ -163,22 +166,26 @@ autocmd FileType python map <buffer> <leader>f :call flake8#Flake8()<CR>
 
 " Telescope
 nnoremap <C-P> <cmd>lua require('usr.telescope').project_files()<CR>
+nnoremap <leader>q <cmd>lua require('telescope.builtin').find_files({ cwd = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':h') })<CR>
+nnoremap <C-P> <cmd>lua require('usr.telescope').project_files()<CR>
 nnoremap <C-F> <cmd>Telescope live_grep<cr>
+nnoremap <C-B> <cmd>lua require('telescope.builtin').git_bcommits()<CR>
 
 " lsp
 nnoremap <leader>g <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>d <cmd>lua vim.diagnostic.open_float()<CR>
 nnoremap gd <cmd>lua vim.lsp.buf.definition()<CR>
-lua vim.diagnostic.config({signs = true, virtual_text = false})
+lua vim.diagnostic.config({signs = true, virtual_text = true})
 
 " tcomment options
 lua require('Comment').setup()
 
-" netrw settings
+" netrw
 let g:netrw_banner=0
 let g:netrw_winsize=20
 let g:netrw_liststyle=3
 let g:netrw_localrmdir='rm -r'
+nnoremap <leader>e <cmd>vsp<CR><cmd>Ex %:p:h<CR>
 
 " Window movement shortcuts
 " move to the window in the direction shown, or create a new window
@@ -218,6 +225,11 @@ vnoremap <silent> <leader>c :<CR>:let @a=@" \| execute "normal! vgvy" \| let res
 
 " Mason
 lua require("mason").setup()
+
+" Git worktrees
+lua require("telescope").load_extension("git_worktree")
+nnoremap <C-t> <cmd>lua require('telescope').extensions.git_worktree.git_worktrees()<CR>
+lua require("git-worktree").setup({ update_on_change_command = "lua require('usr.telescope').project_files()" })
 
 " ----------------------------------
 " Autocmds
@@ -271,6 +283,12 @@ au BufNewFile,BufFilePre,BufRead Dockerfile.* set syntax=dockerfile
 
 " Use 2 spaces for HTML files
 autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2
+
+" Open GitHub at any line
+function! GbrowseWrapper()
+  lua require('usr.custom').gbrowse()
+endfunction
+nnoremap <leader>gb :call GbrowseWrapper()<CR>
 
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g

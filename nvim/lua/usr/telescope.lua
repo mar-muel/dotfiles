@@ -1,4 +1,5 @@
 local M = {}
+local previewers = require('telescope.previewers')
 
 M.project_files = function()
   vim.fn.system('git rev-parse --is-inside-work-tree')
