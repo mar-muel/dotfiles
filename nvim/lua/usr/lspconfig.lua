@@ -1,19 +1,19 @@
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-local lspconfig = require('lspconfig')
 -- local keymap = require('cmp.utils.keymap')
 
 -- Python
 local servers = { 'pyright' }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  vim.lsp.config(lsp, {
     -- on_attach = my_custom_on_attach,
     capabilities = capabilities,
-  }
+  })
+  vim.lsp.enable(lsp)
 end
 
 -- Rust
-lspconfig.rust_analyzer.setup {
+vim.lsp.config('rust_analyzer', {
     settings = {
         ['rust-analyzer'] = {
             check = {
@@ -24,7 +24,8 @@ lspconfig.rust_analyzer.setup {
             }
         }
     }
-}
+})
+vim.lsp.enable('rust_analyzer')
 
 -- luasnip setup
 local luasnip = require 'luasnip'
