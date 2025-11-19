@@ -11,8 +11,8 @@ cd ~/dotfiles && chmod +x set_ubuntu.sh && bash set_ubuntu.sh
 cd ~ && source ~/.bashrc
 
 # install neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-sudo mv ./nvim.appimage /usr/bin/nvim
+curl -LO https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.appimage
+sudo mv nvim-linux-x86_64.appimage /usr/bin/nvim
 sudo chmod +x /usr/bin/nvim
 echo "alias vim='nvim'" >> .bash_aliases
 mkdir -p ~/.config
@@ -21,12 +21,8 @@ cp -R ~/dotfiles/nvim/ ~/.config/nvim
 # tmux setup
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
-# Install miniconda
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-bash ~/miniconda.sh -b -p $HOME/miniconda
-$HOME/miniconda/bin/conda init bash
-source ~/.bashrc
-rm ~/miniconda.sh
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # install node
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
