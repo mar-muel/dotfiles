@@ -89,7 +89,7 @@ vnoremap <C-P> "0p
 cmap w!! w !sudo tee > /dev/null %
 
 " Pretty format JSON
-com! FormatJSON %!python -m json.tool
+com! FormatJSON %!python3 -m json.tool
 
 " ----------------------------------
 " PLUGINS

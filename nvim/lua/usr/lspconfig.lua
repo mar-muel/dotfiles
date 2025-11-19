@@ -26,6 +26,19 @@ lspconfig.rust_analyzer.setup {
     }
 }
 
+-- Go
+require('lspconfig').gopls.setup{
+    settings = {
+        gopls = {
+            analyses = {
+                unusedparams = true,
+                shadow = true,
+            },
+            staticcheck = true,
+        },
+    },
+}
+
 -- luasnip setup
 local luasnip = require 'luasnip'
 
