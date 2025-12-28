@@ -102,6 +102,9 @@ vim.keymap.set('n', '<leader>e', ':Lexplore<CR>')
 -- Sudo save
 vim.keymap.set('c', 'w!!', 'w !sudo tee > /dev/null %')
 
+
+vim.g.pyindent_open_paren = vim.opt.shiftwidth
+
 -- ============================================
 -- Autocmds
 -- ============================================
