@@ -137,6 +137,9 @@ Plug 'jose-elias-alvarez/null-ls.nvim'
 " Git worktrees
 Plug 'ThePrimeagen/git-worktree.nvim'
 
+" Git blame
+Plug 'f-person/git-blame.nvim'
+
 call plug#end()
 
 " ----------------------------------
@@ -147,6 +150,7 @@ lua require("usr.lspconfig")
 lua require("usr.treesitter")
 lua require("usr.telescope")
 lua require("usr.null_ls")
+lua require("usr.gitblame")
 
 " Autopairs
 lua require("nvim-autopairs").setup {}
@@ -289,6 +293,10 @@ function! GbrowseWrapper()
   lua require('usr.custom').gbrowse()
 endfunction
 nnoremap <leader>gb :call GbrowseWrapper()<CR>
+
+" Git blame
+nnoremap <leader>b <cmd>lua require('usr.gitblame').show_blame_temporarily()<CR>
+nnoremap <leader>ob <cmd>GitBlameOpenFileURL<CR>
 
 "  python scripts with wrong indentation:
 " :%s/^\s*/&&/g
