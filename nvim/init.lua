@@ -6,6 +6,9 @@ require("config.lazy")
 -- Quick escape
 vim.keymap.set('i', 'jj', '<Esc>')
 
+-- Terminal mode: Esc to exit to normal mode
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+
 -- Window navigation with auto-split
 local function win_move(key)
   local curwin = vim.fn.winnr()
@@ -124,16 +127,52 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Fix netrw % in :Lexplore: create file in the directory you're browsing
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    vim.keymap.set("n", "%", function()
+      local CURDIR = vim.b.netrw_curdir or vim.fn.getcwd()
+      -- prompt defaults into the browsing dir
+      local NAME = vim.fn.input("New file: ", CURDIR .. "/", "file")
+      if NAME == "" then return end
+
+      -- open the new file in the previous (editing) window, keep Lexplore intact
+      vim.cmd("wincmd p")
+      vim.cmd("edit " .. vim.fn.fnameescape(NAME))
+    end, { buffer = true, silent = true, desc = "netrw: create file in current browse dir" })
+  end,
+})
+
 -- Remove trailing whitespace on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   command = [[%s/\s\+$//e]],
 })
 
--- Immediately start in insert mode in terminal (e.g. when running pdb)
+-- Terminal setup
 vim.api.nvim_create_autocmd('TermOpen', {
   callback = function()
     vim.cmd('startinsert')
+
+    -- Use system clipboard for yanking in terminal buffers
+    vim.opt_local.clipboard = 'unnamedplus'
+
+    -- enable wrapping for better visibility of raw output
+    vim.opt_local.wrap = false
+
+    -- Allow editing terminal buffer in normal mode
+    vim.opt_local.modifiable = true
+    vim.opt_local.undolevels = 1000
+
+    -- Helper that preserves previous buffer when closing terminal
+    local function close_and_restore()
+      local term_buf = vim.api.nvim_get_current_buf()
+      vim.cmd('buffer #')
+      vim.api.nvim_buf_delete(term_buf, { force = true })
+    end
+    vim.keymap.set('t', '<C-d>', close_and_restore, { buffer = true })
+    vim.keymap.set('n', '<C-d>', close_and_restore, { buffer = true })
   end,
 })
 
@@ -142,7 +181,7 @@ local execute_commands = {
   python = ':w<CR>:term python %<CR>',
   c = ':w <bar> exec "!gcc " . shellescape(expand("%")) . " -o " . shellescape(expand("%:r")) . " && ./" . shellescape(expand("%:r"))<CR>',
   cpp = ':w <bar> exec "!g++ -Wall -g -std=c++11 " . shellescape(expand("%")) . " -o " . shellescape(expand("%:r")) . " && ./" . shellescape(expand("%:r"))<CR>',
-  sh = ':w<CR>:term source %<CR>',
+  sh = ':w<CR>:split | term source %<CR>',
 }
 
 for filetype, command in pairs(execute_commands) do

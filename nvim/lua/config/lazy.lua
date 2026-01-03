@@ -50,6 +50,9 @@ vim.g.netrw_banner = 0            -- Hide banner
 vim.g.netrw_winsize = 25          -- Window size
 vim.g.netrw_liststyle = 3         -- Tree view
 vim.g.netrw_hide = 0              -- Show all files
+vim.g.netrw_keepdir = 0           -- Use browsing dir as cd
+vim.g.netrw_rm_cmd = "trash"
+vim.g.netrw_rmdir_cmd = "trash"
 
 -- ============================================
 -- Steup lazy.nvim
