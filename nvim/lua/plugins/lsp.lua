@@ -10,7 +10,8 @@ return {
     dependencies = { 'williamboman/mason.nvim' },
     config = function()
       require('mason-lspconfig').setup({
-        ensure_installed = { 'pyright', 'rust_analyzer', 'gopls' },
+        ensure_installed = { 'pyrefly', 'rust_analyzer', 'gopls' },
+        automatic_enable = false,
       })
     end,
   },
@@ -24,10 +25,12 @@ return {
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Python
-      vim.lsp.config('pyright', {
+      vim.lsp.config('pyrefly', {
         capabilities = capabilities,
+        cmd = { 'uvx', 'pyrefly@1.2.0', 'lsp' },
+        root_markers = { 'uv.lock' },
       })
-      vim.lsp.enable('pyright')
+      vim.lsp.enable('pyrefly')
 
       -- Rust
       vim.lsp.config('rust_analyzer', {

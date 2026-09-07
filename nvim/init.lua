@@ -61,6 +61,7 @@ vim.keymap.set('v', '<leader>c', '"+y')
 vim.keymap.set('n', '<leader>g', vim.lsp.buf.hover)
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
 
 -- LSP diagnostic config
 vim.diagnostic.config({ signs = true, virtual_text = true })
@@ -100,7 +101,14 @@ vim.keymap.set('i', '<C-o>', '<Esc>o')
 vim.keymap.set('n', '<leader>v', ':vsp<CR>:e $MYVIMRC<CR>')
 
 -- File explorer
-vim.keymap.set('n', '<leader>e', ':Lexplore<CR>')
+vim.keymap.set('n', '<leader>e', function()
+  local current_file = vim.fn.expand('%:p')
+  if current_file ~= '' and vim.fn.filereadable(current_file) == 1 then
+    vim.cmd('Lexplore ' .. vim.fn.fnameescape(vim.fn.expand('%:p:h')))
+  else
+    vim.cmd('Lexplore')
+  end
+end)
 
 -- Sudo save
 vim.keymap.set('c', 'w!!', 'w !sudo tee > /dev/null %')
