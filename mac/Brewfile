@@ -1,0 +1,24 @@
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# UNIX shell (command interpreter)
+brew "zsh"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# Web browser focusing on privacy
+cask "brave-browser"
+# Voice and text chat software
+cask "discord"
+# Client for the Dropbox cloud storage service
+cask "dropbox"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# App to write, plan, collaborate, and get organised
+cask "notion"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
+# Music streaming service
+cask "spotify"
+# Messaging app with a focus on speed and security
+cask "telegram"
+# Native desktop client for WhatsApp
+cask "whatsapp"
